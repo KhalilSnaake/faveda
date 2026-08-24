@@ -10,6 +10,7 @@ import { ProductPurchase } from "@/components/ProductPurchase";
 import { ProductCard } from "@/components/ProductCard";
 import { WishlistButton } from "@/components/WishlistButton";
 import { StockBadge } from "@/components/StockBadge";
+import { normalizeProductImage, normalizeProductImages } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 
@@ -25,16 +26,19 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   await ensureSeeded();
   const [product] = await db.select().from(products).where(eq(products.slug, slug)).limit(1);
   if (!product) notFound();
-  const benefits = parseJsonList(product.benefits);
-  const related = await db
-    .select()
-    .from(products)
-    .where(and(eq(products.category, product.category), ne(products.id, product.id)))
-    .limit(3);
+  const normalizedProduct = normalizeProductImage(product);
+  const benefits = parseJsonList(normalizedProduct.benefits);
+  const related = normalizeProductImages(
+    await db
+      .select()
+      .from(products)
+      .where(and(eq(products.category, normalizedProduct.category), ne(products.id, normalizedProduct.id)))
+      .limit(3),
+  );
   const fallback =
     related.length > 0
       ? related
-      : await db.select().from(products).where(ne(products.id, product.id)).limit(3);
+      : normalizeProductImages(await db.select().from(products).where(ne(products.id, normalizedProduct.id)).limit(3));
 
   return (
     <main className="mx-auto max-w-7xl px-5 py-10 md:px-8">
@@ -44,23 +48,23 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <ChevronLeft size={16} /> Boutique
           </Link>
           <div className="overflow-hidden rounded-[36px] border border-leaf/10 bg-paper">
-            <img src={product.image} alt={product.name} className="aspect-[4/5] w-full object-cover" />
+            <img src={normalizedProduct.image} alt={normalizedProduct.name} className="aspect-[4/5] w-full object-cover" />
           </div>
         </div>
         <div className="py-2">
           <div className="flex items-start justify-between gap-3">
             <p className="text-xs uppercase tracking-[0.2em] text-gold-deep">
-              {product.category} · {product.volume}
+              {normalizedProduct.category} · {normalizedProduct.volume}
             </p>
-            <WishlistButton productId={product.id} name={product.name} />
+            <WishlistButton productId={normalizedProduct.id} name={normalizedProduct.name} />
           </div>
-          <h1 className="mt-3 font-display text-5xl leading-tight text-leaf-dark">{product.name}</h1>
-          <p className="mt-3 text-lg text-muted">{product.subtitle}</p>
+          <h1 className="mt-3 font-display text-5xl leading-tight text-leaf-dark">{normalizedProduct.name}</h1>
+          <p className="mt-3 text-lg text-muted">{normalizedProduct.subtitle}</p>
           <div className="mt-6 flex items-center gap-4">
-            <p className="font-display text-4xl text-leaf">{formatCfa(product.price)}</p>
-            <StockBadge stock={product.stock} />
+            <p className="font-display text-4xl text-leaf">{formatCfa(normalizedProduct.price)}</p>
+            <StockBadge stock={normalizedProduct.stock} />
           </div>
-          <p className="mt-6 leading-7 text-ink/80">{product.description}</p>
+          <p className="mt-6 leading-7 text-ink/80">{normalizedProduct.description}</p>
           <ul className="mt-6 space-y-2">
             {benefits.map((benefit) => (
               <li key={benefit} className="flex items-center gap-2 text-sm text-leaf-dark">
@@ -69,16 +73,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             ))}
           </ul>
           <div className="mt-8">
-            <ProductPurchase product={product} />
+            <ProductPurchase product={normalizedProduct} />
           </div>
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             <div className="rounded-3xl bg-cream p-5">
               <p className="text-xs uppercase tracking-[0.16em] text-gold-deep">Utilisation</p>
-              <p className="mt-2 text-sm leading-6 text-muted">{product.usage}</p>
+              <p className="mt-2 text-sm leading-6 text-muted">{normalizedProduct.usage}</p>
             </div>
             <div className="rounded-3xl bg-cream p-5">
               <p className="text-xs uppercase tracking-[0.16em] text-gold-deep">Composition</p>
-              <p className="mt-2 text-sm leading-6 text-muted">{product.ingredients}</p>
+              <p className="mt-2 text-sm leading-6 text-muted">{normalizedProduct.ingredients}</p>
             </div>
           </div>
         </div>

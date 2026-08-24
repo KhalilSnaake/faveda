@@ -15,7 +15,7 @@ export const catalogProducts = [
     volume: "1 L",
     category: "Soins ciblés",
     price: 8500,
-    image: "/images/products/ongles-teigne.jpg",
+    image: "/images/produits/ongles-teigne.jpg",
     benefits: [
       "Soin ciblé des ongles",
       "Formule 100 % végétale",
@@ -38,7 +38,7 @@ export const catalogProducts = [
     volume: "200 g",
     category: "Tisanes",
     price: 6500,
-    image: "/images/products/tisane-plantes.jpg",
+    image: "/images/produits/tisane-plantes.jpg",
     benefits: [
       "Rituel détox en douceur",
       "Plantes séchées à la main",
@@ -61,7 +61,7 @@ export const catalogProducts = [
     volume: "1 L",
     category: "Confort digestif",
     price: 9500,
-    image: "/images/products/douleurs-ventre.jpg",
+    image: "/images/produits/douleurs-ventre.jpg",
     benefits: [
       "Confort abdominal",
       "Formule concentrée",
@@ -84,7 +84,7 @@ export const catalogProducts = [
     volume: "1,5 L",
     category: "Confort digestif",
     price: 12000,
-    image: "/images/products/elixir-ventre.jpg",
+    image: "/images/produits/elixir-ventre.jpg",
     benefits: [
       "Prêt à l’emploi",
       "Idéal en cure",
@@ -107,7 +107,7 @@ export const catalogProducts = [
     volume: "50 ml",
     category: "Soins ciblés",
     price: 7500,
-    image: "/images/products/tete-noire.jpg",
+    image: "/images/produits/tete-noire.jpg",
     benefits: [
       "Recette traditionnelle",
       "Formule légère",
@@ -130,7 +130,7 @@ export const catalogProducts = [
     volume: "250 ml",
     category: "Soins du corps",
     price: 5500,
-    image: "/images/products/lotion-corporelle.jpg",
+    image: "/images/produits/lotion-corporelle.jpg",
     benefits: [
       "Hydratation longue durée",
       "Texture non grasse",

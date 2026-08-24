@@ -7,6 +7,7 @@ import { isAdminAuthenticated } from "@/lib/auth";
 import { applyPromo } from "@/lib/catalog";
 import { generateConfirmationCode, generateTrackingCode } from "@/lib/format";
 import { notifyNewOrder } from "@/lib/notifications";
+import { normalizeProductImage } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 
@@ -77,7 +78,9 @@ export async function POST(request: Request) {
   }
 
   const productIds = incomingItems.map((item) => item.productId);
-  const catalog = await db.select().from(products).where(inArray(products.id, productIds));
+  const catalog = (await db.select().from(products).where(inArray(products.id, productIds))).map((product) =>
+    normalizeProductImage(product),
+  );
   if (catalog.length !== productIds.length) {
     return NextResponse.json({ error: "Un produit est introuvable" }, { status: 400 });
   }

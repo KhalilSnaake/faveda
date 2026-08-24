@@ -8,13 +8,14 @@ import { FREE_DELIVERY_FROM, faqs, testimonials, socialLinks } from "@/lib/catal
 import { formatCfa } from "@/lib/format";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import { FaqList } from "@/components/FaqList";
+import { normalizeProductImages } from "@/lib/storage";
 import { asc, desc } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   await ensureSeeded();
-  const rows = await db.select().from(products).orderBy(asc(products.id));
+  const rows = normalizeProductImages(await db.select().from(products).orderBy(asc(products.id)));
   const featured = rows.filter((product) => product.featured).slice(0, 4);
   const topVideos = await db.select().from(videos).orderBy(desc(videos.views)).limit(4);
 

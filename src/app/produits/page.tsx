@@ -4,6 +4,7 @@ import { ensureSeeded } from "@/db/seed";
 import { ProductExplorer } from "@/components/ProductExplorer";
 import { RitualPack } from "@/components/RitualPack";
 import { ritualPacks } from "@/lib/catalog";
+import { normalizeProductImages } from "@/lib/storage";
 import { asc } from "drizzle-orm";
 
 export const dynamic = "force-dynamic";
@@ -14,7 +15,7 @@ export const metadata = {
 
 export default async function ProductsPage() {
   await ensureSeeded();
-  const rows = await db.select().from(products).orderBy(asc(products.id));
+  const rows = normalizeProductImages(await db.select().from(products).orderBy(asc(products.id)));
   const packs = ritualPacks
     .map((pack) => ({
       ...pack,

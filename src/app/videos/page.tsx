@@ -4,6 +4,7 @@ import { ensureSeeded } from "@/db/seed";
 import { asc } from "drizzle-orm";
 import { VideoGallery } from "@/components/VideoGallery";
 import { socialLinks } from "@/lib/catalog";
+import { normalizeProductImages } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +15,7 @@ export const metadata = {
 export default async function VideosPage() {
   await ensureSeeded();
   const rows = await db.select().from(videos).orderBy(asc(videos.id));
-  const allProducts = await db.select().from(products).orderBy(asc(products.id));
+  const allProducts = normalizeProductImages(await db.select().from(products).orderBy(asc(products.id)));
 
   return (
     <main className="mx-auto max-w-7xl px-5 py-12 md:px-8">

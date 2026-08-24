@@ -13,7 +13,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 md:grid-cols-4 md:px-8">
         <div className="md:col-span-2">
           <img
-            src="/images/logo-faveda.png"
+            src="/images/faveda-white.png"
             alt="Faveda — Tisane traditionnelle à base de plantes"
             className="h-24 w-auto rounded-xl md:h-28"
           />

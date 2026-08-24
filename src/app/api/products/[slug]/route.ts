@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 import { ensureSeeded } from "@/db/seed";
 import { parseJsonList } from "@/lib/format";
+import { normalizeProductImage } from "@/lib/storage";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export async function GET(
     return NextResponse.json({ error: "Produit introuvable" }, { status: 404 });
   }
   return NextResponse.json({
-    ...product,
+    ...normalizeProductImage(product),
     benefits: parseJsonList(product.benefits),
   });
 }
