@@ -1,0 +1,9 @@
+# Supabase CLI local configuration for Faveda.
+# Run `supabase init` locally if you need the complete generated config.
+project_id = "faveda"
+
+[api]
+enabled = true
+
+[db]
+major_version = 15
