@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import { readWishlist } from "@/lib/local";
@@ -23,10 +23,6 @@ export function ProductExplorer({ products }: { products: Product[] }) {
   const [sort, setSort] = useState("featured");
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
-
-  useEffect(() => {
-    setFavoriteIds(readWishlist());
-  }, [favoritesOnly]);
 
   const categories = ["Tous", ...Array.from(new Set(products.map((product) => product.category)))];
 

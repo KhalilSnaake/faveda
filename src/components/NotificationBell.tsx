@@ -60,9 +60,12 @@ export function NotificationBell() {
   }, []);
 
   useEffect(() => {
-    void load();
+    const timeout = window.setTimeout(() => void load(), 0);
     const interval = setInterval(load, 25000);
-    return () => clearInterval(interval);
+    return () => {
+      window.clearTimeout(timeout);
+      clearInterval(interval);
+    };
   }, [load]);
 
   useEffect(() => {

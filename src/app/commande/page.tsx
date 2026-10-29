@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { LoaderCircle, MapPinned, Navigation } from "lucide-react";
 import { useCart } from "@/components/CartProvider";
@@ -38,10 +39,13 @@ export default function CheckoutPage() {
   );
 
   useEffect(() => {
-    const profile = readProfile();
-    if (profile) {
-      setForm((current) => ({ ...current, ...profile }));
-    }
+    const timeout = window.setTimeout(() => {
+      const profile = readProfile();
+      if (profile) {
+        setForm((current) => ({ ...current, ...profile }));
+      }
+    }, 0);
+    return () => window.clearTimeout(timeout);
   }, []);
 
   async function shareLocation() {
@@ -118,9 +122,9 @@ export default function CheckoutPage() {
     return (
       <main className="mx-auto max-w-3xl px-5 py-16 text-center">
         <h1 className="font-display text-4xl text-leaf-dark">Votre panier est vide</h1>
-        <a href="/produits" className="mt-6 inline-flex rounded-full bg-leaf px-6 py-3 text-sm text-cream">
+        <Link href="/produits" className="mt-6 inline-flex rounded-full bg-leaf px-6 py-3 text-sm text-cream">
           Retour à la boutique
-        </a>
+        </Link>
       </main>
     );
   }

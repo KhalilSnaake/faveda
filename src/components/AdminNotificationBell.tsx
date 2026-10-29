@@ -50,9 +50,12 @@ export function AdminNotificationBell({ onChange }: { onChange?: () => void }) {
   }, []);
 
   useEffect(() => {
-    void load();
+    const timeout = window.setTimeout(() => void load(), 0);
     const interval = setInterval(load, 20000);
-    return () => clearInterval(interval);
+    return () => {
+      window.clearTimeout(timeout);
+      clearInterval(interval);
+    };
   }, [load]);
 
   useEffect(() => {

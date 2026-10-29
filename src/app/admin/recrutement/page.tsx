@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Briefcase, ChevronLeft, Eye, EyeOff, Users } from "lucide-react";
 import { formatDate } from "@/lib/format";
@@ -58,7 +58,7 @@ export default function AdminRecruitmentPage() {
   });
   const [error, setError] = useState("");
 
-  async function bootstrap() {
+  const bootstrap = useCallback(async () => {
     const session = await fetch("/api/admin/session", { cache: "no-store" });
     const data = (await session.json()) as { authenticated: boolean };
     if (!data.authenticated) {
@@ -72,11 +72,12 @@ export default function AdminRecruitmentPage() {
     if (jobsRes.ok) setJobs((await jobsRes.json()) as Job[]);
     if (appsRes.ok) setApplications((await appsRes.json()) as Application[]);
     setReady(true);
-  }
+  }, [router]);
 
   useEffect(() => {
-    void bootstrap();
-  }, []);
+    const timeout = window.setTimeout(() => void bootstrap(), 0);
+    return () => window.clearTimeout(timeout);
+  }, [bootstrap]);
 
   async function createJob() {
     setError("");
@@ -151,7 +152,7 @@ export default function AdminRecruitmentPage() {
         <div className="mt-8 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <section className="h-fit rounded-[28px] bg-paper p-6">
             <h2 className="font-display text-3xl text-leaf-dark">Publier une offre</h2>
-            <p className="mt-1 text-sm text-muted">L'offre apparaît immédiatement sur la page /carrieres.</p>
+            <p className="mt-1 text-sm text-muted">L&apos;offre apparaît immédiatement sur la page /carrieres.</p>
             <div className="mt-4 space-y-3">
               <input placeholder="Intitulé du poste *" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="h-11 w-full rounded-2xl border border-leaf/10 bg-cream px-3" />
               <div className="grid grid-cols-2 gap-3">
@@ -163,7 +164,7 @@ export default function AdminRecruitmentPage() {
               <textarea placeholder="Profil recherché (une ligne par critère)" rows={3} value={form.requirements} onChange={(e) => setForm({ ...form, requirements: e.target.value })} className="w-full rounded-2xl border border-leaf/10 bg-cream px-3 py-2" />
               {error && <p className="text-sm text-red-700">{error}</p>}
               <button type="button" onClick={createJob} className="h-11 w-full rounded-full bg-leaf text-sm text-cream">
-                Publier l'offre
+                Publier l&apos;offre
               </button>
             </div>
           </section>

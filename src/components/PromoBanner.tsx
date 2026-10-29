@@ -16,7 +16,7 @@ export function PromoBanner() {
           Code <strong className="tracking-wider text-gold">FAVEDA10</strong> = 10 % de remise sur votre première commande
         </span>
         <Link href="/produits" className="ml-2 hidden rounded-full bg-cream/15 px-3 py-0.5 text-xs text-cream sm:inline">
-          J'en profite →
+          J&apos;en profite →
         </Link>
       </div>
       <button

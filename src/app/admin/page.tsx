@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Search } from "lucide-react";
 import { formatCfa, formatDate } from "@/lib/format";
@@ -171,7 +171,7 @@ export default function AdminPage() {
     setAuditLoading(false);
   }
 
-  async function bootstrap() {
+  const bootstrap = useCallback(async () => {
     const session = await fetch("/api/admin/session", {
       credentials: "include",
       cache: "no-store",
@@ -202,19 +202,21 @@ export default function AdminPage() {
       setAuditActions(data2.actions);
     }
     setReady(true);
-  }
+  }, [router]);
 
   useEffect(() => {
-    void bootstrap();
-  }, []);
+    const timeout = window.setTimeout(() => void bootstrap(), 0);
+    return () => window.clearTimeout(timeout);
+  }, [bootstrap]);
 
   const can = (capability: AdminCapability) => Boolean(currentUser && roleCan(currentUser.role, capability));
 
   const selected = orders.find((order) => order.id === selectedId) ?? null;
 
-  useEffect(() => {
-    setAdminNotes(selected?.adminNotes ?? "");
-  }, [selected?.id, selected?.adminNotes]);
+  function selectOrder(id: number) {
+    setSelectedId(id);
+    setAdminNotes(orders.find((order) => order.id === id)?.adminNotes ?? "");
+  }
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -468,7 +470,7 @@ export default function AdminPage() {
                   <button
                     key={order.id}
                     type="button"
-                    onClick={() => { setTab("orders"); setSelectedId(order.id); }}
+                    onClick={() => { setTab("orders"); selectOrder(order.id); }}
                     className="flex w-full items-center justify-between rounded-2xl bg-cream px-4 py-3 text-left hover:bg-leaf-mist"
                   >
                     <div>
@@ -544,7 +546,7 @@ export default function AdminPage() {
                 <button
                   key={order.id}
                   type="button"
-                  onClick={() => setSelectedId(order.id)}
+                  onClick={() => selectOrder(order.id)}
                   className={`w-full rounded-2xl px-4 py-3 text-left ${selectedId === order.id ? "bg-leaf-mist" : "bg-cream"}`}
                 >
                   <div className="flex items-center justify-between gap-3">

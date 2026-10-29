@@ -9,7 +9,8 @@ export default function MyOrdersPage() {
   const [orders, setOrders] = useState<SavedOrder[]>([]);
 
   useEffect(() => {
-    setOrders(readOrders());
+    const timeout = window.setTimeout(() => setOrders(readOrders()), 0);
+    return () => window.clearTimeout(timeout);
   }, []);
 
   return (

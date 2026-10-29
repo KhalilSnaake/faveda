@@ -10,7 +10,8 @@ export function WishlistButton({ productId, name }: { productId: number; name?: 
   const [active, setActive] = useState(false);
 
   useEffect(() => {
-    setActive(readWishlist().includes(productId));
+    const timeout = window.setTimeout(() => setActive(readWishlist().includes(productId)), 0);
+    return () => window.clearTimeout(timeout);
   }, [productId]);
 
   return (

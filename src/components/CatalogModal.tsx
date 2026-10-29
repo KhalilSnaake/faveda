@@ -41,18 +41,18 @@ export function CatalogModal() {
   // Fetch products once when modal opens
   useEffect(() => {
     if (!catalogOpen) return;
-    if (products.length > 0) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    fetch("/api/products")
-      .then((res) => res.json())
-      .then((data: CatalogProduct[]) => {
-        setProducts(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
+    if (products.length > 0) return;
+    const timeout = window.setTimeout(() => {
+      setLoading(true);
+      fetch("/api/products")
+        .then((res) => res.json())
+        .then((data: CatalogProduct[]) => {
+          setProducts(data);
+          setLoading(false);
+        })
+        .catch(() => setLoading(false));
+    }, 0);
+    return () => window.clearTimeout(timeout);
   }, [catalogOpen, products.length]);
 
   const categories = useMemo(
