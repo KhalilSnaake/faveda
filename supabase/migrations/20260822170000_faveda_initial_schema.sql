@@ -138,6 +138,36 @@ create table if not exists public.messages (
 
 create index if not exists messages_kind_created_at_idx on public.messages(kind, created_at desc);
 
+create table if not exists public.jobs (
+  id serial primary key,
+  title varchar(200) not null,
+  department varchar(120) not null,
+  location varchar(120) not null,
+  contract varchar(80) not null,
+  description text not null,
+  requirements text not null,
+  active boolean not null default true,
+  created_at timestamp not null default now()
+);
+
+create table if not exists public.applications (
+  id serial primary key,
+  job_id integer references public.jobs(id) on delete set null,
+  kind varchar(30) not null default 'spontaneous',
+  full_name varchar(160) not null,
+  email varchar(160),
+  phone varchar(40),
+  city varchar(120),
+  experience varchar(120),
+  profile_link varchar(300),
+  message text not null,
+  status varchar(30) not null default 'new',
+  created_at timestamp not null default now()
+);
+
+create index if not exists applications_job_id_idx on public.applications(job_id);
+create index if not exists applications_status_idx on public.applications(status, created_at desc);
+
 create table if not exists public.videos (
   id serial primary key,
   slug varchar(120) not null unique,
@@ -169,6 +199,8 @@ alter table public.notifications enable row level security;
 alter table public.admin_audit_logs enable row level security;
 alter table public.messages enable row level security;
 alter table public.videos enable row level security;
+alter table public.jobs enable row level security;
+alter table public.applications enable row level security;
 
 -- The application connects using the server-side PostgreSQL connection string.
 -- Add explicit RLS policies only if you later consume these tables from the browser

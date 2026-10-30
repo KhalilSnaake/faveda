@@ -53,3 +53,18 @@ npx drizzle-kit push --config=drizzle.config.ts
 ```
 
 Use Supabase Direct connection for migrations / `pg_dump`; use the Supabase pooler (usually session mode port 5432) for the running Next.js application.
+
+## 5. Deploy on Vercel
+
+Import the repository into Vercel as a Next.js project. Set the Root Directory to the folder containing `package.json`; Vercel detects the framework and uses `npm run build` automatically. No custom `vercel.json` is required.
+
+Before deploying, apply the database migration and add these Production environment variables in Vercel:
+
+- `SUPABASE_DATABASE_URL` — Supabase Session Pooler URL.
+- `APP_AUTH_ENABLED=true` — required before making the site public; `false` disables the admin login requirement.
+- `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and `ADMIN_NAME` — set the initial admin account before its first creation. Do not use the example credentials.
+- `ADMIN_SECRET` — a unique, long random secret used to sign admin and driver session cookies.
+
+If using server-side Supabase platform APIs, also set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`. Keep the service role key server-only; never use a `NEXT_PUBLIC_` prefix. `SUPABASE_STORAGE_BUCKET` is optional and defaults to `images`. `DB_POOL_MAX` is optional and defaults to `5` for Supabase.
+
+Configure Preview variables separately if Preview deployments will connect to a database. Do not copy production credentials into Preview unless that is intentional. After deployment, verify `/api/health` reports a successful database connection.
