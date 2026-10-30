@@ -11,7 +11,7 @@ import {
 
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),
-  slug: varchar("slug", { length: 120 }).notNull().unique(),
+  slug: varchar("slug", { length: 120 }).notNull().unique("products_slug_key"),
   name: varchar("name", { length: 200 }).notNull(),
   subtitle: varchar("subtitle", { length: 240 }).notNull(),
   description: text("description").notNull(),
@@ -41,7 +41,7 @@ export const drivers = pgTable("drivers", {
 
 export const orders = pgTable("orders", {
   id: serial("id").primaryKey(),
-  trackingCode: varchar("tracking_code", { length: 20 }).notNull().unique(),
+  trackingCode: varchar("tracking_code", { length: 20 }).notNull().unique("orders_tracking_code_key"),
   confirmationCode: varchar("confirmation_code", { length: 4 }).notNull(),
   customerName: varchar("customer_name", { length: 160 }).notNull(),
   customerPhone: varchar("customer_phone", { length: 40 }).notNull(),
@@ -80,7 +80,7 @@ export const messages = pgTable("messages", {
 
 export const videos = pgTable("videos", {
   id: serial("id").primaryKey(),
-  slug: varchar("slug", { length: 120 }).notNull().unique(),
+  slug: varchar("slug", { length: 120 }).notNull().unique("videos_slug_key"),
   title: varchar("title", { length: 200 }).notNull(),
   description: text("description").notNull(),
   category: varchar("category", { length: 60 }).notNull(),
@@ -111,7 +111,7 @@ export const notifications = pgTable("notifications", {
 export const adminUsers = pgTable("admin_users", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 120 }).notNull(),
-  username: varchar("username", { length: 60 }).notNull().unique(),
+  username: varchar("username", { length: 60 }).notNull().unique("admin_users_username_key"),
   passwordHash: varchar("password_hash", { length: 200 }).notNull(),
   role: varchar("role", { length: 30 }).notNull().default("manager"),
   active: boolean("active").notNull().default(true),
